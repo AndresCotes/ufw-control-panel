@@ -1,0 +1,36 @@
+<div class="space-y-5">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <h2 class="text-2xl font-extrabold text-white">Dashboard</h2>
+    <div class="flex gap-2">
+      <button class="rounded-lg btn-ok px-3 py-2 text-sm font-semibold" (click)="setFirewall('enable')">Activar</button>
+      <button class="rounded-lg btn-danger px-3 py-2 text-sm font-semibold" (click)="setFirewall('disable')">Desactivar</button>
+      <button class="rounded-lg btn-brand px-3 py-2 text-sm font-semibold" (click)="setFirewall('reload')">Recargar</button>
+    </div>
+  </div>
+
+  @if (error) {
+  <p class="rounded-lg border border-rose-500/50 bg-rose-900/30 text-rose-200 px-3 py-2 text-sm">{{ error }}</p>
+  }
+
+  @if (loading) {
+  <p class="text-blue-200">Cargando...</p>
+  } @else {
+  <div class="grid md:grid-cols-3 lg:grid-cols-6 gap-3">
+    <div class="panel-card rounded-xl p-3"><p class="text-xs text-blue-200">Estado</p><p class="text-lg font-extrabold" [class.text-emerald-400]="summary?.ufwActive" [class.text-rose-400]="!summary?.ufwActive">{{summary?.ufwActive ? 'Activo' : 'Inactivo'}}</p></div>
+    <div class="panel-card rounded-xl p-3"><p class="text-xs text-blue-200">Total</p><p class="text-lg font-extrabold text-blue-300">{{summary?.totalRules}}</p></div>
+    <div class="panel-card rounded-xl p-3"><p class="text-xs text-blue-200">Allow</p><p class="text-lg font-extrabold text-emerald-400">{{summary?.allowRules}}</p></div>
+    <div class="panel-card rounded-xl p-3"><p class="text-xs text-blue-200">Deny</p><p class="text-lg font-extrabold text-rose-400">{{summary?.denyRules}}</p></div>
+    <div class="panel-card rounded-xl p-3"><p class="text-xs text-blue-200">Reject</p><p class="text-lg font-extrabold text-amber-400">{{summary?.rejectRules}}</p></div>
+    <div class="panel-card rounded-xl p-3"><p class="text-xs text-blue-200">Limit</p><p class="text-lg font-extrabold text-fuchsia-400">{{summary?.limitRules}}</p></div>
+  </div>
+
+  <div class="panel-card rounded-xl p-4">
+    <h3 class="font-bold text-white">Últimas acciones</h3>
+    <div class="mt-2 space-y-2">
+      @for (item of summary?.latestActions || []; track $index) {
+      <div class="text-sm text-blue-100 border-b border-blue-800 pb-1">{{item.created_at}} · {{item.module}} · {{item.action}} · {{item.success ? 'ok' : 'error'}}</div>
+      }
+    </div>
+  </div>
+  }
+</div>

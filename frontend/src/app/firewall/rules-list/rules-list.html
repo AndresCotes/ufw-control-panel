@@ -1,0 +1,75 @@
+<div class="space-y-5">
+  <div class="panel-card rounded-2xl p-5">
+    <h2 class="text-xl font-extrabold text-white">Constructor de reglas UFW</h2>
+    <div class="grid md:grid-cols-3 gap-3 mt-4">
+      <label class="text-sm font-medium text-blue-100">Acción
+        <select class="w-full border rounded-lg px-3 py-2 mt-1" [(ngModel)]="form.action" name="action">
+          <option value="allow">allow</option><option value="deny">deny</option><option value="reject">reject</option><option value="limit">limit</option>
+        </select>
+      </label>
+      <label class="text-sm font-medium text-blue-100">IP origen
+        <input class="w-full border rounded-lg px-3 py-2 mt-1" [(ngModel)]="form.sourceIp" name="sourceIp" />
+      </label>
+      <label class="text-sm font-medium text-blue-100">Dirección
+        <select class="w-full border rounded-lg px-3 py-2 mt-1" [(ngModel)]="form.direction" name="direction">
+          <option value="in">in</option><option value="out">out</option><option value="any">any</option>
+        </select>
+      </label>
+      <label class="text-sm font-medium text-blue-100">Interfaz
+        <select class="w-full border rounded-lg px-3 py-2 mt-1" [(ngModel)]="form.interfaceName" name="interfaceName">
+          <option value="">(cualquiera)</option>
+          @for (iface of interfaces; track iface) { <option [value]="iface">{{ iface }}</option> }
+        </select>
+      </label>
+      <label class="text-sm font-medium text-blue-100">IP destino
+        <input class="w-full border rounded-lg px-3 py-2 mt-1" [(ngModel)]="form.destinationIp" name="destinationIp" />
+      </label>
+      <label class="text-sm font-medium text-blue-100">Puerto
+        <input class="w-full border rounded-lg px-3 py-2 mt-1" [(ngModel)]="form.port" name="port" />
+      </label>
+      <label class="text-sm font-medium text-blue-100">Protocolo
+        <select class="w-full border rounded-lg px-3 py-2 mt-1" [(ngModel)]="form.protocol" name="protocol">
+          <option value="tcp">tcp</option><option value="udp">udp</option><option value="any">any</option>
+        </select>
+      </label>
+      <label class="text-sm font-medium text-blue-100 md:col-span-2">Comentario
+        <input class="w-full border rounded-lg px-3 py-2 mt-1" [(ngModel)]="form.comment" name="comment" />
+      </label>
+    </div>
+
+    <div class="mt-4 flex gap-2">
+      <button class="rounded-lg btn-brand px-4 py-2 text-sm font-semibold" (click)="makePreview()">Vista previa</button>
+      <button class="rounded-lg btn-ok px-4 py-2 text-sm font-semibold" [disabled]="saving" (click)="createRule()">{{ saving ? 'Guardando...' : 'Crear regla' }}</button>
+    </div>
+
+    @if (preview) { <pre class="mt-3 text-sm bg-[#08142a] text-cyan-300 rounded-lg p-3 overflow-x-auto">{{ preview }}</pre> }
+    @if (success) { <p class="mt-3 text-sm text-emerald-300 font-medium">{{ success }}</p> }
+    @if (error) { <p class="mt-3 text-sm text-rose-300 font-medium">{{ error }}</p> }
+    @if (backendWarning) { <pre class="mt-3 text-xs text-amber-200 bg-amber-900/30 border border-amber-700 rounded-lg p-2 overflow-x-auto">{{ backendWarning }}</pre> }
+  </div>
+
+  <div class="panel-card rounded-2xl p-5">
+    <div class="flex items-center justify-between">
+      <h3 class="font-extrabold text-white">Reglas actuales (UFW status numbered)</h3>
+      <button class="rounded-lg btn-muted px-3 py-1.5 text-sm" (click)="load()">Refrescar</button>
+    </div>
+
+    @if (loading) { <p class="text-sm text-blue-200 mt-3">Cargando reglas...</p> } @else {
+      <div class="mt-3 overflow-x-auto">
+        <table class="min-w-full text-sm">
+          <thead><tr class="text-left border-b border-blue-800 text-blue-100"><th class="p-2">#</th><th class="p-2">To</th><th class="p-2">Action</th><th class="p-2">From</th><th class="p-2">Acciones</th></tr></thead>
+          <tbody>
+            @for (r of rules; track r.ufwNumber) {
+              <tr class="border-b border-blue-800/60 hover:bg-blue-900/30">
+                <td class="p-2">{{ r.ufwNumber }}</td><td class="p-2">{{ r.to }}</td>
+                <td class="p-2 font-semibold" [class.text-emerald-300]="r.action.includes('ALLOW')" [class.text-rose-300]="r.action.includes('DENY')">{{ r.action }}</td>
+                <td class="p-2">{{ r.from }}</td>
+                <td class="p-2"><button class="rounded-lg btn-danger px-2 py-1 text-xs" (click)="deleteRule(r.ufwNumber)">Eliminar</button></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>

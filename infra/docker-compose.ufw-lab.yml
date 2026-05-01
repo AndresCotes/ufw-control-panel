@@ -1,0 +1,20 @@
+services:
+  ufw-lab:
+    build:
+      context: ./ufw-lab
+      dockerfile: Dockerfile
+    container_name: ufw-lab
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    networks:
+      - ufwlab_net
+    ports:
+      - "8088:80"
+      - "2228:22"
+    restart: unless-stopped
+
+networks:
+  ufwlab_net:
+    driver: bridge

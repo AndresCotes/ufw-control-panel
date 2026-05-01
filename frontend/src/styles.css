@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+:root {
+  --bg-main: #0f1f3b;
+  --bg-soft: #1b2d4f;
+  --bg-card: #1b2f53;
+  --bg-card-2: #203862;
+  --line: #315488;
+  --line-2: #4168a1;
+  --text: #d7e6ff;
+  --muted: #91b0df;
+  --title: #f3f8ff;
+  --brand: #1d4ed8;
+  --brand-2: #1e40af;
+  --ok: #166534;
+  --danger: #7f1d1d;
+  --warn: #78350f;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Manrope", "Segoe UI", sans-serif;
+  color: var(--text);
+  min-height: 100vh;
+  background: var(--bg-main);
+}
+
+.panel-card {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.btn-brand {
+  background: linear-gradient(180deg, #1d4ed8, #1e3a8a);
+  color: #fff;
+  border: 1px solid #3b82f6;
+}
+
+.btn-brand:hover { background: linear-gradient(180deg, #1e40af, #1e3a8a); }
+
+.btn-ok {
+  background: #14532d;
+  border: 1px solid #22c55e;
+  color: #fff;
+}
+.btn-ok:hover { background: #166534; }
+
+.btn-danger {
+  background: #7f1d1d;
+  border: 1px solid #ef4444;
+  color: #fff;
+}
+.btn-danger:hover { background: #991b1b; }
+
+.btn-muted {
+  background: #1e3a5f;
+  border: 1px solid #3b82f6;
+  color: #dbeafe;
+}
+.btn-muted:hover { background: #254a78; }
+
+input, select, textarea {
+  background: var(--bg-card-2) !important;
+  color: var(--text) !important;
+  border-color: var(--line-2) !important;
+}
+
+::placeholder {
+  color: var(--muted);
+}

@@ -1,0 +1,75 @@
+services:
+  ufw-lab:
+    image: ubuntu:24.04
+    container_name: ufw-lab
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    command: >
+      bash -lc "apt-get update && apt-get install -y curl ca-certificates gnupg ufw iproute2 iptables iputils-ping net-tools procps sudo &&
+      curl -fsSL https://deb.nodesource.com/setup_20.x | bash - &&
+      apt-get install -y nodejs &&
+      npm install -g --unsafe-perm node-red &&
+      mkdir -p /data &&
+      ufw --force reset && ufw default deny incoming && ufw default allow outgoing &&
+      ufw allow in on eth0 to any port 1880 proto tcp &&
+      ufw --force enable &&
+      node-red -u /data --port 1880 &
+      tail -f /dev/null"
+    ports:
+      - "1890:1880"
+    networks:
+      - appnet
+    restart: unless-stopped
+
+  backend:
+    image: node:22-bookworm
+    container_name: ufw-panel-backend
+    working_dir: /app
+    command: bash -lc "if ! command -v docker >/dev/null 2>&1; then apt-get update && apt-get install -y docker.io; fi && npm run seed:admin && npm run dev"
+    volumes:
+      - ../backend:/app
+      - ../backend/node_modules:/app/node_modules
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      NODE_ENV: development
+      HOST: 0.0.0.0
+      PORT: 4000
+      JWT_SECRET: change_this_secret
+      JWT_EXPIRES_IN: 8h
+      DB_CLIENT: sqlite
+      SQLITE_PATH: ./data/ufw-control-panel.db
+      CORS_ORIGIN: http://localhost:4600
+      ADMIN_EMAIL: admin@local
+      ADMIN_PASSWORD: Admin123!
+      UFW_CONTAINER_NAME: ufw-lab
+    ports:
+      - "4000:4000"
+    depends_on:
+      - ufw-lab
+    networks:
+      - appnet
+    restart: unless-stopped
+
+  frontend:
+    image: node:22-bookworm
+    container_name: ufw-panel-frontend
+    working_dir: /app
+    command: bash -lc "npm start"
+    volumes:
+      - ../frontend:/app
+      - ../frontend/node_modules:/app/node_modules
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+    ports:
+      - "4600:4600"
+    depends_on:
+      - backend
+    networks:
+      - appnet
+    restart: unless-stopped
+
+networks:
+  appnet:
+    driver: bridge

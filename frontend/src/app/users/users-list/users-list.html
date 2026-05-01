@@ -1,0 +1,9 @@
+<div class="panel-card rounded-xl p-4">
+  <h2 class="text-lg font-bold text-white">Usuarios</h2>
+  @if (error) { <p class="text-sm text-rose-300 mt-2">{{error}}</p> }
+  <div class="mt-3 space-y-2">
+    @for (u of users; track u.id) {
+      <div class="text-sm text-blue-100 border-b border-blue-800 pb-2">{{u.name}} · {{u.email}} · {{u.role}} · {{u.active ? 'activo' : 'inactivo'}}</div>
+    }
+  </div>
+</div>

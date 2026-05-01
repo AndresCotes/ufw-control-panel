@@ -1,0 +1,14 @@
+<div class="panel-card rounded-xl p-4 space-y-4">
+  <h2 class="text-lg font-bold text-white">Zonas</h2>
+  <div class="grid md:grid-cols-3 gap-2">
+    <input class="border rounded px-2 py-2" placeholder="Nombre" [(ngModel)]="name" name="name" />
+    <input class="border rounded px-2 py-2 md:col-span-2" placeholder="Descripción" [(ngModel)]="description" name="description" />
+  </div>
+  <button class="rounded-lg btn-brand px-3 py-2 text-sm" (click)="create()">Crear zona</button>
+  @if (error) { <p class="text-sm text-rose-300">{{error}}</p> }
+  <div class="grid md:grid-cols-2 gap-2">
+    @for (z of zones; track z.id) {
+      <div class="border border-blue-800 rounded p-3 bg-[#1f3760]"><p class="font-semibold text-white">{{z.name}}</p><p class="text-sm text-blue-200">{{z.description || 'Sin descripción'}}</p></div>
+    }
+  </div>
+</div>

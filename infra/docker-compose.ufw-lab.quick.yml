@@ -1,0 +1,18 @@
+services:
+  ufw-lab:
+    image: ubuntu:24.04
+    container_name: ufw-lab
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    command: >
+      bash -lc "apt-get update && apt-get install -y ufw iproute2 iptables iputils-ping curl net-tools procps sudo &&
+      ufw --force reset && ufw default deny incoming && ufw default allow outgoing && ufw --force enable && tail -f /dev/null"
+    networks:
+      - ufwlab_net
+    restart: unless-stopped
+
+networks:
+  ufwlab_net:
+    driver: bridge
