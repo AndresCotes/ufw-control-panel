@@ -1,0 +1,20 @@
+# Node/Angular
+**/node_modules/
+**/dist/
+
+# Env and secrets
+**/.env
+**/.env.local
+
+# Databases and runtime
+**/*.db
+**/*.db-shm
+**/*.db-wal
+
+# Logs
+*.log
+/tmp/
+
+# OS/IDE
+.DS_Store
+.vscode/
