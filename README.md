@@ -154,3 +154,48 @@ URLs:
 ./deploy/start.sh
 ./deploy/stop.sh
 ```
+
+## Modo Producción: Controlar UFW del host (sin contenedor de prueba)
+
+Usa este modo si quieres administrar el firewall REAL del servidor.
+
+### Instalación
+
+```bash
+cd /tmp/ufw-control-panel
+./deploy/install-host.sh /opt/ufw-control-panel TU_DOMINIO_O_IP ufwpanel
+```
+
+### Importante (obligatorio)
+
+Configura sudoers para permitir solo `ufw` al usuario de servicio:
+
+```bash
+sudo visudo
+```
+
+Agregar:
+
+```text
+ufwpanel ALL=(root) NOPASSWD: /usr/sbin/ufw
+```
+
+### Operación
+
+```bash
+./deploy/start-host.sh
+./deploy/stop-host.sh
+```
+
+### URLs
+- App: `http://TU_DOMINIO_O_IP`
+- API health: `http://TU_DOMINIO_O_IP/health`
+
+## Modo laboratorio (opcional)
+
+Si solo quieres pruebas aisladas con contenedor Ubuntu + Node-RED:
+
+```bash
+cd infra
+docker compose -f docker-compose.app-dev.yml up -d
+```

@@ -103,3 +103,17 @@ From `infra/`:
 3. Add visual zones graph (drag and drop).
 4. Add stronger audit filters/search and pagination.
 5. Add production hardening guide for host UFW control.
+
+## Deployment Modes
+
+### 1) Host mode (recommended for real firewall control)
+- Script: `deploy/install-host.sh`
+- Backend runs as systemd service on host (`ufw-control-panel-backend`).
+- Frontend served by Nginx static files.
+- Backend controls host UFW (`UFW_CONTAINER_NAME=` empty).
+- Requires sudoers entry for service user and `/usr/sbin/ufw` only.
+
+### 2) Lab mode (testing only)
+- Script: `deploy/install.sh` (docker-first)
+- Uses `ufw-lab` container and optional Node-RED test app.
+- Does NOT control host firewall directly.
